@@ -1,0 +1,3 @@
+[submodule "libraries/RFControl"]
+	path = libraries/RFControl
+	url = https://github.com/pimatic/RFControl.git

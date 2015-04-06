@@ -1,0 +1,5 @@
+#define SSID "YOUR_WIFI_SSID"
+#define PASSWORD "YOUR_WIFI_PW"
+#define RECEIVER_PIN 2
+#define PIMATIC_IP "192.168.1.2"
+#define PIMATIC_PORT 80
