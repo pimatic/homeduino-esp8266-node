@@ -1,7 +1,7 @@
 #include <ESP8266WiFi.h>
 #include <RFControl.h>
 
-#include <settings.h>
+#include "settings.h"
 
 void setup()
 {
@@ -41,23 +41,32 @@ void loop()
       unsigned int pulse_length_divider = RFControl::getPulseLengthDivider();
       RFControl::compressTimings(buckets, timings, timings_size);
       
-      String msg = "";
+      String bucketsStr = "[";
       for(unsigned int i=0; i < 8; i++) {
           unsigned long bucket = buckets[i] * pulse_length_divider;
-          msg += bucket;
-          msg += "_";
+          if(bucket == 0) {
+           break; 
+          }
+          if(i != 0) {
+            bucketsStr += ",";
+          }
+          bucketsStr += bucket;
+          
       }
+      bucketsStr += "]";
+      String pulsesStr;
       for(unsigned int i=0; i < timings_size; i++) {
-          msg += timings[i];
+          pulsesStr += timings[i];
       }
       RFControl::continueReceiving();
-      String url = "/?msg=" + msg;
+      String url = "/homeduino/received?buckets=" + bucketsStr + "&pulses=" + pulsesStr;
       WiFiClient client;
       if (!client.connect(PIMATIC_IP, PIMATIC_PORT)) {
         Serial.println("connection failed");
         return;
       }
-      Serial.print(msg);
+      Serial.print(bucketsStr);
+      Serial.print(pulsesStr);
       Serial.print("\r\n");
       // This will send the request to the server
       client.print(String("GET ") + url + " HTTP/1.1\r\n" +
