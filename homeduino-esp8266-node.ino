@@ -1,4 +1,4 @@
-#include <ESP8266WiFi.h>
+ #include <ESP8266WiFi.h>
 #include <RFControl.h>
 
 #include "settings.h"
@@ -59,14 +59,18 @@ void loop()
           pulsesStr += timings[i];
       }
       RFControl::continueReceiving();
-      String url = "/homeduino/received?buckets=" + bucketsStr + "&pulses=" + pulsesStr;
+      Serial.print(bucketsStr);
+      Serial.print(" ");
+      Serial.print(pulsesStr);
+      Serial.print("\r\n");
+      Serial.flush();
+      String url = "/homeduino/received?apikey=" + String(HOMEDUINO_APIKEY) + "&buckets=" + bucketsStr + "&pulses=" + pulsesStr;
       WiFiClient client;
       if (!client.connect(PIMATIC_IP, PIMATIC_PORT)) {
         Serial.println("connection failed");
         return;
       }
-      Serial.print(bucketsStr);
-      Serial.print(pulsesStr);
+
       Serial.print("\r\n");
       // This will send the request to the server
       client.print(String("GET ") + url + " HTTP/1.1\r\n" +
